@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot.security.mapper.SysMenuMapper">
+  <resultMap id="BaseResultMap" type="com.springboot.security.domain.table.SysMenu">
+    <id column="menu_id" jdbcType="BIGINT" property="menuId" />
+    <result column="menu_code" jdbcType="VARCHAR" property="menuCode" />
+    <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
+    <result column="parent_name" jdbcType="VARCHAR" property="parentName" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="order_num" jdbcType="INTEGER" property="orderNum" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="component" jdbcType="VARCHAR" property="component" />
+    <result column="permission" jdbcType="VARCHAR" property="permission" />
+    <result column="is_frame" jdbcType="CHAR" property="isFrame" />
+    <result column="menu_type" jdbcType="CHAR" property="menuType" />
+    <result column="visible" jdbcType="CHAR" property="visible" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+    <result column="updater" jdbcType="VARCHAR" property="updater" />
+    <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    menu_id, menu_code, menu_name, parent_name, parent_id, order_num, path, component, 
+    permission, is_frame, menu_type, visible, icon, remark, del_flag, creator, create_at, 
+    updater, update_at
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_menu
+    where menu_id = #{menuId,jdbcType=BIGINT}
+  </select>
+  <select id="selectMenuList" resultType="com.springboot.security.domain.table.SysMenu">
+    select
+    <include refid="Base_Column_List" />
+    from sys_menu
+  </select>
+
+  <select id="selectMenuListById" resultType="com.springboot.security.domain.table.SysMenu">
+    select m.menu_id, m.menu_code, m.menu_name, m.parent_name, m.parent_id, m.order_num, m.path, m.component,
+           m.permission, m.is_frame, m.menu_type, m.visible, m.icon, m.remark, m.del_flag, m.creator, m.create_at,
+           m.updater, m.update_at
+    from sys_menu m
+           LEFT JOIN sys_role_menu rm on rm.menu_code = m.menu_code
+           LEFT JOIN sys_role r on r.role_code = rm.role_code
+           LEFT JOIN sys_user_role ur on ur.role_code = r.role_code
+           left join sys_user u on ur.user_code = u.user_code
+    WHERE u.user_id = #{userId}
+      and m.visible = 0
+    ORDER BY m.parent_id, m.order_num
+  </select>
+  <select id="selectMenuPermsByUserId" resultType="java.lang.String">
+    select distinct m.permission
+    from sys_menu m
+           LEFT JOIN sys_role_menu rm on rm.menu_code = m.menu_code
+           LEFT JOIN sys_role r on r.role_code = rm.role_code
+           LEFT JOIN sys_user_role ur on ur.role_code = r.role_code
+           left join sys_user u on ur.user_code = u.user_code
+    WHERE u.user_id = #{userId} and m.visible = 0 and m.permission is not null
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_menu
+    where menu_id = #{menuId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.springboot.security.domain.table.SysMenu">
+    insert into sys_menu (menu_id, menu_code, menu_name, 
+      parent_name, parent_id, order_num, 
+      path, component, permission, 
+      is_frame, menu_type, visible, 
+      icon, remark, del_flag, 
+      creator, create_at, updater, 
+      update_at)
+    values (#{menuId,jdbcType=BIGINT}, #{menuCode,jdbcType=VARCHAR}, #{menuName,jdbcType=VARCHAR}, 
+      #{parentName,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, #{orderNum,jdbcType=INTEGER}, 
+      #{path,jdbcType=VARCHAR}, #{component,jdbcType=VARCHAR}, #{permission,jdbcType=VARCHAR}, 
+      #{isFrame,jdbcType=CHAR}, #{menuType,jdbcType=CHAR}, #{visible,jdbcType=CHAR}, 
+      #{icon,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{delFlag,jdbcType=CHAR}, 
+      #{creator,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR}, 
+      #{updateAt,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.springboot.security.domain.table.SysMenu">
+    insert into sys_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="menuId != null">
+        menu_id,
+      </if>
+      <if test="menuCode != null">
+        menu_code,
+      </if>
+      <if test="menuName != null">
+        menu_name,
+      </if>
+      <if test="parentName != null">
+        parent_name,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="orderNum != null">
+        order_num,
+      </if>
+      <if test="path != null">
+        path,
+      </if>
+      <if test="component != null">
+        component,
+      </if>
+      <if test="permission != null">
+        permission,
+      </if>
+      <if test="isFrame != null">
+        is_frame,
+      </if>
+      <if test="menuType != null">
+        menu_type,
+      </if>
+      <if test="visible != null">
+        visible,
+      </if>
+      <if test="icon != null">
+        icon,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="createAt != null">
+        create_at,
+      </if>
+      <if test="updater != null">
+        updater,
+      </if>
+      <if test="updateAt != null">
+        update_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="menuId != null">
+        #{menuId,jdbcType=BIGINT},
+      </if>
+      <if test="menuCode != null">
+        #{menuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null">
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentName != null">
+        #{parentName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNum != null">
+        #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="path != null">
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="component != null">
+        #{component,jdbcType=VARCHAR},
+      </if>
+      <if test="permission != null">
+        #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="isFrame != null">
+        #{isFrame,jdbcType=CHAR},
+      </if>
+      <if test="menuType != null">
+        #{menuType,jdbcType=CHAR},
+      </if>
+      <if test="visible != null">
+        #{visible,jdbcType=CHAR},
+      </if>
+      <if test="icon != null">
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createAt != null">
+        #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="updateAt != null">
+        #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.springboot.security.domain.table.SysMenu">
+    update sys_menu
+    <set>
+      <if test="menuCode != null">
+        menu_code = #{menuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null">
+        menu_name = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentName != null">
+        parent_name = #{parentName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNum != null">
+        order_num = #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="path != null">
+        path = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="component != null">
+        component = #{component,jdbcType=VARCHAR},
+      </if>
+      <if test="permission != null">
+        permission = #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="isFrame != null">
+        is_frame = #{isFrame,jdbcType=CHAR},
+      </if>
+      <if test="menuType != null">
+        menu_type = #{menuType,jdbcType=CHAR},
+      </if>
+      <if test="visible != null">
+        visible = #{visible,jdbcType=CHAR},
+      </if>
+      <if test="icon != null">
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createAt != null">
+        create_at = #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updater != null">
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="updateAt != null">
+        update_at = #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where menu_id = #{menuId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.springboot.security.domain.table.SysMenu">
+    update sys_menu
+    set menu_code = #{menuCode,jdbcType=VARCHAR},
+      menu_name = #{menuName,jdbcType=VARCHAR},
+      parent_name = #{parentName,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      order_num = #{orderNum,jdbcType=INTEGER},
+      path = #{path,jdbcType=VARCHAR},
+      component = #{component,jdbcType=VARCHAR},
+      permission = #{permission,jdbcType=VARCHAR},
+      is_frame = #{isFrame,jdbcType=CHAR},
+      menu_type = #{menuType,jdbcType=CHAR},
+      visible = #{visible,jdbcType=CHAR},
+      icon = #{icon,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=CHAR},
+      creator = #{creator,jdbcType=VARCHAR},
+      create_at = #{createAt,jdbcType=TIMESTAMP},
+      updater = #{updater,jdbcType=VARCHAR},
+      update_at = #{updateAt,jdbcType=TIMESTAMP}
+    where menu_id = #{menuId,jdbcType=BIGINT}
+  </update>
+</mapper>
