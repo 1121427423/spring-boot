@@ -45,6 +45,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         if(Objects.isNull(loginUser)) {
             throw new RuntimeException("用户未登陆");
         }
+        //刷新令牌有效期
+        tokenUtils.verifyToken(loginUser);
         //存入SecurityContextHolder
         //前后端分离，再次访问SecurityContextHolder已经不是登录时的SecurityContextHolder，要再次保存Authentication
         //   获取权限信息封装到Authentication

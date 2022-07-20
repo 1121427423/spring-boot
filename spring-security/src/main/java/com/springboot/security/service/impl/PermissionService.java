@@ -67,22 +67,17 @@ public class PermissionService
      * @param permissions 以 PERMISSION_NAMES_DELIMETER 为分隔符的权限列表
      * @return 用户是否具有以下任意一个权限
      */
-    public boolean hasAnyPerm(String permissions)
-    {
-        if (StringUtils.isEmpty(permissions))
-        {
+    public boolean hasAnyPerm(String permissions) {
+        if (StringUtils.isEmpty(permissions)) {
             return false;
         }
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        if (Objects.isNull(loginUser) || CollectionUtils.isEmpty(loginUser.getPermissions()))
-        {
+        if (Objects.isNull(loginUser) || CollectionUtils.isEmpty(loginUser.getPermissions())) {
             return false;
         }
         Set<String> authorities = loginUser.getPermissions();
-        for (String permission : permissions.split(PERMISSION_DELIMETER))
-        {
-            if (permission != null && hasPermissions(authorities, permission))
-            {
+        for (String permission : permissions.split(PERMISSION_DELIMETER)) {
+            if (permission != null && hasPermissions(authorities, permission)) {
                 return true;
             }
         }

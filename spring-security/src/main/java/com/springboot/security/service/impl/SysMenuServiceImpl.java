@@ -61,18 +61,15 @@ public class SysMenuServiceImpl implements SysMenuService {
     @Override
     public List<SysMenu> buildMenuTree(List<SysMenu> menus) {
         List<SysMenu> returnList = new ArrayList<SysMenu>();
-        for (Iterator<SysMenu> iterator = menus.iterator(); iterator.hasNext();)
-        {
+        for (Iterator<SysMenu> iterator = menus.iterator(); iterator.hasNext();) {
             SysMenu t = (SysMenu) iterator.next();
             // 根据传入的某个父节点ID,遍历该父节点的所有子节点
-            if (t.getParentId() == 0)
-            {
+            if (Objects.isNull(t.getParentId())) {
                 recursionFn(menus, t);
                 returnList.add(t);
             }
         }
-        if (returnList.isEmpty())
-        {
+        if (returnList.isEmpty()) {
             returnList = menus;
         }
         return returnList;
@@ -101,19 +98,15 @@ public class SysMenuServiceImpl implements SysMenuService {
      * @param list
      * @param t
      */
-    private void recursionFn(List<SysMenu> list, SysMenu t)
-    {
+    private void recursionFn(List<SysMenu> list, SysMenu t) {
         // 得到子节点列表
         List<SysMenu> childList = getChildList(list, t);
         t.setChildren(childList);
-        for (SysMenu tChild : childList)
-        {
-            if (hasChild(list, tChild))
-            {
+        for (SysMenu tChild : childList) {
+            if (hasChild(list, tChild)) {
                 // 判断是否有子节点
                 Iterator<SysMenu> it = childList.iterator();
-                while (it.hasNext())
-                {
+                while (it.hasNext()) {
                     SysMenu n = (SysMenu) it.next();
                     recursionFn(list, n);
                 }
@@ -124,19 +117,16 @@ public class SysMenuServiceImpl implements SysMenuService {
     /**
      * 得到子节点列表
      */
-    private List<SysMenu> getChildList(List<SysMenu> list, SysMenu t)
-    {
-        List<SysMenu> tlist = new ArrayList<SysMenu>();
+    private List<SysMenu> getChildList(List<SysMenu> list, SysMenu t) {
+        List<SysMenu> tList = new ArrayList<SysMenu>();
         Iterator<SysMenu> it = list.iterator();
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             SysMenu n = (SysMenu) it.next();
-            if (n.getParentId().longValue() == t.getMenuId().longValue())
-            {
-                tlist.add(n);
+            if (!Objects.isNull(n.getParentId()) && n.getParentId().longValue() == t.getMenuId().longValue()) {
+                tList.add(n);
             }
         }
-        return tlist;
+        return tList;
     }
 
     /**

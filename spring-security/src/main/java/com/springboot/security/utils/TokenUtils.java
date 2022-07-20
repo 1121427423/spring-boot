@@ -116,8 +116,8 @@ public class TokenUtils {
      *
      */
     public void verifyToken(LoginUser loginUser) {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        String userAgent = attributes.getRequest().getHeader("User-Agent").toLowerCase();
+//        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//        String token = attributes.getRequest().getHeader("User-Agent").toLowerCase();
 
         long expireTime = loginUser.getExpireTime();
         long currentTime = System.currentTimeMillis();

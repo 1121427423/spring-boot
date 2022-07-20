@@ -14,12 +14,12 @@ public class SysMenuResponse {
 
     private String msg;
 
-    private List<TreeSelect> menuTreeList;
+    private List<TreeSelect> menuList;
 
     public SysMenuResponse(String code, String msg, List<TreeSelect> treeSelects){
         this.code = code;
         this.msg = msg;
-        this.menuTreeList = treeSelects;
+        this.menuList = treeSelects;
     }
 }
 
