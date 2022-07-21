@@ -15,7 +15,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot.version>2.3.7.RELEASE</spring-boot.version>
         <arthas.version>3.4.8</arthas.version>
-        <druid.version>1.2.11</druid.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
         <fastjson.version>1.2.72</fastjson.version>
         <commons-lang3>3.4</commons-lang3>
@@ -24,6 +23,7 @@
 
     <modules>
         <module>spring-security</module>
+        <module>spring-oauth2</module>
     </modules>
 
     <dependencies>
@@ -32,12 +32,6 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- 数据库连接池 -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-            <version>${druid.version}</version>
-        </dependency>
         <!--   fastjson  -->
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -52,21 +46,10 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>com.taobao.arthas</groupId>
             <artifactId>arthas-spring-boot-starter</artifactId>
             <version>${arthas.version}</version>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
