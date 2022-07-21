@@ -86,28 +86,24 @@ public class SysLoginServiceImpl implements SysLoginService {
         //认证通过，使用userid生成一个token
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         //把完整的用户信息存入redis
-        if (Objects.isNull(loginUser.getToken())) {
-            String token = tokenUtils.createToken(loginUser);
-            JSONObject json = new JSONObject();
-            json.put("userInfo",loginUser.getSysUser());
-            json.put("token",token);
-            json.put("expireTime",loginUser.getExpireTime());
-            return new LoginResponse("0000", "Authentication success", json);
-        }
+        String token = tokenUtils.createToken(loginUser);
 
-        return new LoginResponse("0000", "Authentication failed");
+        JSONObject json = new JSONObject();
+        json.put("userInfo",loginUser.getSysUser());
+        json.put("token",token);
+        json.put("expireTime",loginUser.getExpireTime());
+        return new LoginResponse("0000", "Authentication success", json);
+
     }
 
     @Override
     public void checkCaptcha(String captcha, String captchaId) {
         String captchaCache = redisCache.getCacheObject("captcha:" + captchaId);
         if (Objects.isNull(captchaCache) || !captcha.equalsIgnoreCase(captchaCache)) {
-            log.info("验证码校验失败");
-            return;
+            throw new RuntimeException("验证码校验失败");
         }
-
         //验证码验证通过,删除缓存
-        redisCache.deleteObject(captchaCache);
+        redisCache.deleteObject("captcha:" + captchaId);
     }
 
     @Override

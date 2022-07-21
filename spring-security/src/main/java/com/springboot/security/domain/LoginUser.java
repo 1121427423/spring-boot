@@ -37,6 +37,8 @@ public class LoginUser implements UserDetails, Serializable {
     private Long loginTime;
 
     private String token;
+    public LoginUser() {}
+
 
     public LoginUser(SysUser sysUser, Set<String> permissions, Set<String> roles) {
         this.sysUser = sysUser;
