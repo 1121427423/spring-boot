@@ -22,6 +22,8 @@
         <spring-boot.version>2.3.7.RELEASE</spring-boot.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
         <jjwt.version>0.9.1</jjwt.version>
+        <mybatis.version>2.2.2</mybatis.version>
+        <druid.version>1.2.11</druid.version>
         <spring-cloud-security.version>2.2.5.RELEASE</spring-cloud-security.version>
     </properties>
 
@@ -65,6 +67,34 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>${jjwt.version}</version>
+        </dependency>
+
+        <!--    mybatis    -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>${mybatis.version}</version>
+        </dependency>
+
+        <!--    mysql连接驱动    -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--   fastjson  -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+
+        <!-- druid数据库连接池 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${druid.version}</version>
         </dependency>
 
         <dependency>

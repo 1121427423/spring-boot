@@ -19,8 +19,10 @@
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <druid.version>1.2.11</druid.version>
         <spring-boot.version>2.3.7.RELEASE</spring-boot.version>
+        <mybatis-generator.version>1.4.1</mybatis-generator.version>
+        <mybatis.version>2.2.2</mybatis.version>
+        <druid.version>1.2.11</druid.version>
         <jjwt.version>0.9.1</jjwt.version>
     </properties>
 
@@ -94,14 +96,14 @@
         <dependency>
             <groupId>org.mybatis.generator</groupId>
             <artifactId>mybatis-generator-core</artifactId>
-            <version>1.4.1</version>
+            <version>${mybatis-generator.version}</version>
         </dependency>
 
         <!--    mybatis    -->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.2.2</version>
+            <version>${mybatis.version}</version>
         </dependency>
 
        <!--    mysql连接驱动    -->
