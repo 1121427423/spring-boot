@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.springboot.security</groupId>
-    <artifactId>spring-security</artifactId>
+    <groupId>com.springboot-oauth</groupId>
+    <artifactId>spring-oauth-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-security</name>
-    <description>spring-security-demo</description>
+    <name>spring-oauth-server</name>
+    <description>spring-oauth-server</description>
     <packaging>jar</packaging>
 
     <parent>
@@ -20,42 +20,36 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot.version>2.3.7.RELEASE</spring-boot.version>
-        <mybatis-generator.version>1.4.1</mybatis-generator.version>
-        <mybatis.version>2.2.2</mybatis.version>
-        <druid.version>1.2.11</druid.version>
+        <commons-pool2.version>2.11.1</commons-pool2.version>
         <jjwt.version>0.9.1</jjwt.version>
-        <httpclient.version>4.5.13</httpclient.version>
+        <mybatis.version>2.2.2</mybatis.version>
+        <mybatis-generator.version>1.4.1</mybatis-generator.version>
+        <druid.version>1.2.11</druid.version>
+        <spring-cloud-security.version>2.2.5.RELEASE</spring-cloud-security.version>
     </properties>
 
     <dependencies>
-
-        <!--   补全logback依赖包     -->
+        <!-- spring cloud中的oauth2依赖 -->
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-access</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-oauth2</artifactId>
+            <version>${spring-cloud-security.version}</version>
         </dependency>
 
+        <!-- spring cloud中的security依赖 -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-security</artifactId>
+            <version>${spring-cloud-security.version}</version>
         </dependency>
 
-        <!--    spring-security    -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-
+        <!-- web模块 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-
+        <!-- redis依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -68,36 +62,11 @@
             <version>${commons-pool2.version}</version>
         </dependency>
 
-        <!-- druid数据库连接池 -->
+        <!-- jjwt依赖 -->
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-            <version>${druid.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <!--   mybatis 逆向工程工具包   -->
-        <dependency>
-            <groupId>org.mybatis.generator</groupId>
-            <artifactId>mybatis-generator-core</artifactId>
-            <version>${mybatis-generator.version}</version>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jjwt.version}</version>
         </dependency>
 
         <!--    mybatis    -->
@@ -107,7 +76,15 @@
             <version>${mybatis.version}</version>
         </dependency>
 
-       <!--    mysql连接驱动    -->
+        <!--   mybatis 逆向工程工具包   -->
+        <dependency>
+            <groupId>org.mybatis.generator</groupId>
+            <artifactId>mybatis-generator-core</artifactId>
+            <version>${mybatis-generator.version}</version>
+        </dependency>
+
+
+        <!--    mysql连接驱动    -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -121,25 +98,17 @@
             <version>${fastjson.version}</version>
         </dependency>
 
-        <!--Token生成与解析-->
+        <!-- druid数据库连接池 -->
         <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>${jjwt.version}</version>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${druid.version}</version>
         </dependency>
 
-       <!--   commons-lang3     -->
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3}</version>
-        </dependency>
-
-        <!-- httpclient -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${httpclient.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -172,7 +141,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.3.7.RELEASE</version>
                 <configuration>
-                    <mainClass>com.springboot.security.SpringSecurityApplication</mainClass>
+                    <mainClass>com.springboot.oauth.server.SpringOauthServerApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

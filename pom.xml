@@ -24,6 +24,8 @@
     <modules>
         <module>spring-security</module>
         <module>spring-oauth2</module>
+        <module>spring-oauth-server</module>
+        <module>spring-oauth-client</module>
     </modules>
 
     <dependencies>

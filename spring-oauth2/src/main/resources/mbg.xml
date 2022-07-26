@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!--targetRuntime有多个取值，代表生成的接口方法的复杂度-->
+    <context id="testTables" targetRuntime="MyBatis3">
+
+        <commentGenerator>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true" />
+            <!--注释中去除日期注释-->
+            <property name="suppressDate" value="true"/>
+            <!--注释中添加数据库字段备注注释-->
+            <property name="addRemarkComments" value="true"/>
+
+        </commentGenerator>
+
+        <!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://123.60.148.210:3306/springboot?useUnicode=true&amp;characterEncoding=utf8&amp;serverTimezone=Asia/Shanghai&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"
+                        userId="root"
+                        password="123456">
+            <!-- 放在重名问题导致生成重复的内容-->
+            <property name="nullCatalogMeansCurrent" value="true" />
+        </jdbcConnection>
+
+        <!--选定java类型的解析器：使用默认的就可以 -->
+        <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL 和NUMERIC 类型解析为java.math.BigDecimal -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <!-- javaBean 的生成策略 -->
+        <!--指定我们生成的代码指定目标工程和目标包-->
+        <!--
+            targetPackage:生成Bean类的位置
+            targetProject:目标工程（.\src包下）
+        -->
+        <javaModelGenerator targetPackage="com.springboot.oauth2.domain.table" targetProject=".\spring-oauth2\src\main\java">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="true" />
+            <!-- 从数据库返回的值被清理前后的空格 -->
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+
+        <!--映射文件的生成策略 -->
+        <!--
+                targetProject:mapper映射文件生成的位置
+                 targetProject:目标工程（.\resource 包下）
+         -->
+        <sqlMapGenerator targetPackage="mybatis\mapper"  targetProject=".\spring-oauth2\src\main\resources">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+        <!--接口文件的生成策略 -->
+        <!-- targetPackage：mapper接口生成的位置 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.springboot.oauth2.mapper" targetProject=".\spring-oauth2\src\main\java">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+
+        <!-- 指定要逆向生成哪些数据库的表 -->
+        <!--
+            tableName: 指明数据库表
+            domainObjectName：指明要生成对应JavaBean的名称
+        -->
+
+        <table tableName="oauth_client_details" domainObjectName="OauthClientDetail" enableCountByExample="false"
+               enableUpdateByExample="false" enableDeleteByExample="false"
+            enableSelectByExample="false" selectByExampleQueryId="false" >
+        </table>
+
+<!--        <table tableName="sys_role" domainObjectName="SysRole" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false" >-->
+<!--        </table>-->
+
+<!--        <table tableName="sys_menu" domainObjectName="SysMenu" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false" >-->
+<!--        </table>-->
+
+<!--        <table tableName="sys_router" domainObjectName="SysRouter" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false" >-->
+<!--        </table>-->
+
+<!--        <table tableName="sys_dict" domainObjectName="SysDict" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false" >-->
+<!--        </table>-->
+
+        <!-- <table schema="" tableName="sys_user"></table>
+        <table schema="" tableName="sys_role"></table>
+        <table schema="" tableName="sys_permission"></table>
+        <table schema="" tableName="sys_user_role"></table>
+        <table schema="" tableName="sys_role_permission"></table> -->
+
+        <!-- 有些表的字段需要指定java类型
+         <table schema="" tableName="">
+            <columnOverride column="" javaType="" />
+        </table> -->
+    </context>
+</generatorConfiguration>
