@@ -1,4 +1,4 @@
-package com.springboot.security.utils;
+package com.springboot.oauth.client.utils;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -13,6 +13,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
@@ -23,11 +24,11 @@ import javax.net.ssl.X509TrustManager;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+/**
+ * @author king
+ */
 public class HttpUtils {
 
     public static String POST = "post";
@@ -39,8 +40,6 @@ public class HttpUtils {
     private static final int CONNECT_REQUEST_TIMEOUT = Integer.parseInt("60000");
     private static final int SO_TIMEOUT = Integer.parseInt("60000");
 
-    private static String cookie;
-
     public static void main(String[] args) {
 //        Map<String, Object> map = new HashMap<>(2);
 //        map.put("username","86547462");
@@ -50,30 +49,42 @@ public class HttpUtils {
 //        } catch (Exception e) {
 //            throw new RuntimeException(e);
 //        }
-        doGet("http://127.0.0.1:8001/oauth/authorize?response_type=code&client_id=1121427423&scope=all&redirect_uri=https://www.bilibili.com");
+        Map<String, Object> headerMap = new HashMap<>(2);
+        headerMap.put("Cookie", new BasicHeader("Cookie","JSESSIONID=A994F60409602F844C6CD0FAA1D7FF48"));
+        doGet("http://127.0.0.1:8001/oauth/authorize?response_type=code&scope=all&client_id=1121427423&redirect_uri=https://www.bilibili.com",headerMap);
     }
 
     public static String doPost(String url) {
         try {
-            return doPost(url, null);
+            return doPost(url, null, null);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static String doGet(String url) {
+    public static String doGet(String url, Map<String,Object> headerMap) {
         CloseableHttpClient client = null;
         CloseableHttpResponse response = null;
         try {
             // 创建客户端连接对象
             client = HttpClients.createDefault();
             HttpGet httpGet = new HttpGet(url);
-            httpGet.setHeader("Cookie", "JSESSIONID=D6E78D2C7A55623B11D469BC3FA5FB5A");
             RequestConfig config = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).setConnectionRequestTimeout(CONNECT_REQUEST_TIMEOUT)
                     .setSocketTimeout(SO_TIMEOUT).build();
             httpGet.setConfig(config);
+            //headerMap用作请求参数map
+            if(null != headerMap && headerMap.size() > 0) {
+                for (String key: headerMap.keySet()) {
+                    httpGet.addHeader((Header) headerMap.get(key));
+                }
+            }
             // 获取返回对象
             response = client.execute(httpGet);
+            //清空headerMap，用作返回头map集合
+            headerMap = headerMap == null ? new HashMap<>(16) : headerMap;
+            headerMap.clear();
+            getResponseHeader(response, headerMap);
+
             // 整理返回值
             HttpEntity entity = response.getEntity();
             return EntityUtils.toString(entity);
@@ -95,7 +106,7 @@ public class HttpUtils {
         }
     }
 
-    public static String doPost(String url, Map<String, Object> paraMap)
+    public static String doPost(String url, Map<String, Object> paraMap, Map<String, Object> headerMap)
             throws Exception {
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse resp = null;
@@ -114,12 +125,24 @@ public class HttpUtils {
                     list.add(new BasicNameValuePair(entry.getKey(), entry.getValue().toString()));
                 }
             }
+
+            if(null != headerMap && headerMap.size() > 0) {
+                for (String key: headerMap.keySet()) {
+                    httpPost.addHeader((Header) headerMap.get(key));
+                }
+            }
+
             // 设置请求和传输超时时间
             RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(SO_TIMEOUT)
                     .setConnectTimeout(CONNECT_TIMEOUT).build();
             httpPost.setConfig(requestConfig);
             httpPost.setEntity(new UrlEncodedFormEntity(list, CHARSET));
             resp = httpClient.execute(httpPost);
+
+            headerMap = headerMap == null ? new HashMap<>(16) : headerMap;
+            headerMap.clear();
+            getResponseHeader(resp, headerMap);
+
             rtnValue = EntityUtils.toString(resp.getEntity(), CHARSET);
         } finally {
             if (null != resp) {
@@ -133,6 +156,14 @@ public class HttpUtils {
         return rtnValue;
     }
 
+    /**
+     * 获取请求返回头参数集合
+     * @param response CloseableHttpResponse
+     * @param headerMap 请求返回头参数集合
+     */
+    public static void getResponseHeader(CloseableHttpResponse response, Map<String, Object> headerMap) {
+        Arrays.stream(response.getAllHeaders()).forEach(header -> headerMap.put(header.getName(),header));
+    }
 
     public static CloseableHttpClient getHttpsClient() throws Exception {
         try {
