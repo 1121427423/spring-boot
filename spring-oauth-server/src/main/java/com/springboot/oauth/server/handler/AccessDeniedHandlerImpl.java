@@ -1,4 +1,4 @@
-package com.springboot.security.handler;
+package com.springboot.oauth.server.handler;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

@@ -1,60 +1,81 @@
 package com.springboot.oauth.server.domain;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.springboot.oauth.server.domain.table.SysUser;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
-public class LoginUser implements UserDetails {
+public class LoginUser implements UserDetails, Serializable {
 
-    private String username;
+    private static final long serialVersionUID = 2112304150406901511L;
 
-    private String password;
+    private SysUser sysUser;
 
-    private List<GrantedAuthority> authorities;
+    private Set<String> permissions;
 
-    // 构造方法
-    public LoginUser(String username, String password, List<GrantedAuthority> authorities) {
-        this.username = username;
-        this.password = password;
-        this.authorities = authorities;
+    private Set<String> roles;
+
+    @JSONField(serialize = false)
+    @JsonIgnore
+    private List<SimpleGrantedAuthority> authorities;
+
+    private Long expireTime;
+
+    private Long loginTime;
+
+    private String token;
+    public LoginUser() {}
+
+
+    public LoginUser(SysUser sysUser, Set<String> permissions, Set<String> roles) {
+        this.sysUser = sysUser;
+        this.permissions = permissions;
+        this.roles = roles;
+        this.loginTime = System.currentTimeMillis();
+        this.expireTime = System.currentTimeMillis() + 120 * 60 * 1000;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
+        if(!Objects.isNull(authorities)) {
+            return authorities;
+        }
+        authorities = permissions.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return authorities;
     }
 
     @Override
     public String getPassword() {
-        return this.password;
+        return sysUser.getPassword();
     }
 
     @Override
-    public String getUsername() {
-        return this.username;
-    }
+    public String getUsername() { return sysUser.getUsername(); }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+    public boolean isAccountNonExpired() { return true; }
 
     @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+    public boolean isAccountNonLocked() { return "0".equals(sysUser.getStatus()); }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return expireTime > System.currentTimeMillis();
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return "0".equals(sysUser.getDelFlag());
     }
 }

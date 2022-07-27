@@ -1,33 +1,44 @@
 package com.springboot.oauth.server.service.impl;
 
-
 import com.springboot.oauth.server.domain.LoginUser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.AuthorityUtils;
+import com.springboot.oauth.server.domain.table.SysUser;
+import com.springboot.oauth.server.service.SysUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 
-@Service
+/**
+ * @author king
+ * @version 1.0
+ * @className UserService
+ * @description TODO
+ * @date 2022/7/9
+ */
+@Slf4j
+@Service("UserDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Resource(name = "SysUserService")
+    private SysUserService userService;
+    @Resource(name = "PermissionService")
+    private SysPermissionServiceImpl permissionService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        //实际是根据用户名去数据库查，这里就直接用静态数据了
-        if(!username.equals("86547462")) {
-            throw new UsernameNotFoundException("用户名不存在！");
+
+        // 查询数据库信息
+        SysUser sysUser = userService.selectUserByUsername(username);
+
+        if (ObjectUtils.isEmpty(sysUser)) {
+            log.info("登录用户：{} 不存在.", username);
+            throw new UsernameNotFoundException("登录用户：" + username+ " 不存在");
         }
-        // 密码加密
-        String password = passwordEncoder.encode("123456");
-        //创建User用户，自定义的User
-        return new LoginUser(username,password, AuthorityUtils.
-                commaSeparatedStringToAuthorityList("admin"));
+
+        return new LoginUser(sysUser, permissionService.getMenuPermission(sysUser), permissionService.getRolePermission(sysUser));
     }
 }

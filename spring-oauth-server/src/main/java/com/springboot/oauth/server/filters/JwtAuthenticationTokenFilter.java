@@ -1,9 +1,8 @@
-package com.springboot.security.filters;
+package com.springboot.oauth.server.filters;
 
-import com.springboot.security.domain.LoginUser;
-import com.springboot.security.utils.TokenUtils;
+import com.springboot.oauth.server.domain.LoginUser;
+import com.springboot.oauth.server.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;

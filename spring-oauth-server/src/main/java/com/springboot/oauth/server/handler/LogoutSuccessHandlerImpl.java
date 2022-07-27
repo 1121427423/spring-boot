@@ -1,10 +1,10 @@
-package com.springboot.security.handler;
+package com.springboot.oauth.server.handler;
 
 import com.alibaba.fastjson.JSONObject;
-import com.springboot.security.domain.LoginUser;
-import com.springboot.security.utils.RedisCache;
-import com.springboot.security.utils.TokenUtils;
-import com.springboot.security.utils.WebUtils;
+import com.springboot.oauth.server.domain.LoginUser;
+import com.springboot.oauth.server.utils.RedisCache;
+import com.springboot.oauth.server.utils.TokenUtils;
+import com.springboot.oauth.server.utils.WebUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
