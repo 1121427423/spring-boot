@@ -72,6 +72,23 @@ public class TokenUtils {
     }
 
     /**
+     * 获取用户身份信息
+     *
+     * @return 用户信息
+     */
+    public LoginUser getLoginUser(String token) {
+        // 获取请求携带的令牌
+        if (StringUtils.isNotEmpty(token)) {
+            Claims claims = parseToken(token);
+            // 解析对应的权限以及用户信息
+            String uuid = (String) claims.get("login_user_key");
+            String userKey = getTokenKey(uuid);
+            return JSONObject.parseObject(redisCache.getCacheObject(userKey), LoginUser.class);
+        }
+        return null;
+    }
+
+    /**
      * 设置用户身份信息
      */
     public void setLoginUser(LoginUser loginUser) {

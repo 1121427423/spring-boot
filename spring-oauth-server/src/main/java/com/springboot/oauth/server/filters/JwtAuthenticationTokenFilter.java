@@ -11,9 +11,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -33,6 +35,14 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //获取token
         String token = request.getHeader("Oauth-Token");
+        Cookie[] cookies = request.getCookies();
+        if (!Objects.isNull(cookies) && cookies.length > 0 && Objects.isNull(token)) {
+            for (int i = 0; i < cookies.length; i++) {
+                if("Oauth-Token".equals(cookies[i].getName())) {
+                    token = cookies[i].getValue();
+                }
+            }
+        }
         if(StringUtils.isBlank(token)) {
             //放行
             filterChain.doFilter(request, response);
@@ -40,7 +50,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
 
         //解析token,从redis中获取用户信息
-        LoginUser loginUser = tokenUtils.getLoginUser(request);
+        LoginUser loginUser = tokenUtils.getLoginUser(token);
         if(Objects.isNull(loginUser)) {
             throw new RuntimeException("用户未登陆");
         }

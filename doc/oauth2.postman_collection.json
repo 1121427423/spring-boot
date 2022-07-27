@@ -1,0 +1,199 @@
+{
+	"info": {
+		"_postman_id": "221d6ffc-dfff-45c7-8e43-3417bf8db71b",
+		"name": "oauth2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "captcha",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8001/captcha/bgi5464bkj46bbkj",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"captcha",
+						"bgi5464bkj46bbkj"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8001/login?userCode=admin&password=111111&captcha&captchaId=bgi5464bkj46bbkj",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "userCode",
+							"value": "admin"
+						},
+						{
+							"key": "password",
+							"value": "111111"
+						},
+						{
+							"key": "captcha",
+							"value": null
+						},
+						{
+							"key": "captchaId",
+							"value": "bgi5464bkj46bbkj"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getMenuList",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Oauth-Token",
+						"value": "eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImFlYTk2NTBmLTAyYTQtNDBiZS1iMWNiLWJlZDMyZTM5ZTM2MiJ9.Zc9gqnmSwXH-0ew63RdrBjAHVuRCn4eU96p3FmrNg2umY2J0Bhnv8ZVta4q3aaVaxCGeq1kQfDMD0n_mNQ2_HA",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8001/getMenuList/10001",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"getMenuList",
+						"10001"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "oauth/authorize",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Oauth-Token",
+						"value": "eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImFlYTk2NTBmLTAyYTQtNDBiZS1iMWNiLWJlZDMyZTM5ZTM2MiJ9.Zc9gqnmSwXH-0ew63RdrBjAHVuRCn4eU96p3FmrNg2umY2J0Bhnv8ZVta4q3aaVaxCGeq1kQfDMD0n_mNQ2_HA",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8001/oauth/authorize?response_type=code&scope=all&client_id=1121427423&redirect_uri=https://www.bilibili.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"oauth",
+						"authorize"
+					],
+					"query": [
+						{
+							"key": "response_type",
+							"value": "code"
+						},
+						{
+							"key": "scope",
+							"value": "all"
+						},
+						{
+							"key": "client_id",
+							"value": "1121427423"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "https://www.bilibili.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "oauth/token",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "checkToken",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "1121427423",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Oauth-Token",
+						"value": "",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8001/oauth/check_token?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTg5NDYzNjksInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsic3lzdGVtOnVzZXIiLCJzeXN0ZW06bWVudSIsInN5c3RlbTphdXRob3JpdHkiLCJzeXN0ZW06ZGljdCJdLCJqdGkiOiI0NzY2ZDdiMi1iMjM4LTRiOTItOGRkZS1kZDQ1OWIxNzY3NGUiLCJjbGllbnRfaWQiOiIxMTIxNDI3NDIzIiwic2NvcGUiOlsiYWxsIl19.OVyZMqRf8LSJZCgCJvLEa02rW0pGfCvbYofblK5sloo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"oauth",
+						"check_token"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTg5NDYzNjksInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsic3lzdGVtOnVzZXIiLCJzeXN0ZW06bWVudSIsInN5c3RlbTphdXRob3JpdHkiLCJzeXN0ZW06ZGljdCJdLCJqdGkiOiI0NzY2ZDdiMi1iMjM4LTRiOTItOGRkZS1kZDQ1OWIxNzY3NGUiLCJjbGllbnRfaWQiOiIxMTIxNDI3NDIzIiwic2NvcGUiOlsiYWxsIl19.OVyZMqRf8LSJZCgCJvLEa02rW0pGfCvbYofblK5sloo"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refreshToken",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

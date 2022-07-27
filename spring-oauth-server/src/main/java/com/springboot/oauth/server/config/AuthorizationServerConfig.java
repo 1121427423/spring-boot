@@ -79,10 +79,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     }
 
 
+    @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security.passwordEncoder(passwordEncoder)
                 //开启表单认证。创建ClientCredentialsTokenEndpointFilter对请求auth/token拦截，并获取client_id和secret进行身份认证
-                .allowFormAuthenticationForClients();
+                .allowFormAuthenticationForClients()
+                .checkTokenAccess("permitAll()"); //开启oauth/check_token，默认不允许访问
     }
 
     //密码模式需要配置
@@ -94,6 +96,4 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .tokenStore(tokenStore)
                 .accessTokenConverter(jwtAccessTokenConverter);
     }
-
-
 }

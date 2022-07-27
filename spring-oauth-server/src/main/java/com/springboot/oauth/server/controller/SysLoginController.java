@@ -30,7 +30,11 @@ public class SysLoginController {
     @GetMapping("login")
     public void login(HttpServletResponse response, LoginRequest loginBody) {
         LoginResponse loginResponse = loginService.login(loginBody);
-        Cookie cookie = new Cookie("Oauth-Token", (String) loginResponse.getData().get("token"));
+        String token = (String) loginResponse.getData().get("token");
+        Cookie cookie = null;
+        if(!Objects.isNull(token)) {
+            cookie = new Cookie("Oauth-Token", token);
+        }
         response.addCookie(cookie);
         response.setHeader("Oauth-Token", (String) loginResponse.getData().get("token"));
     }
@@ -41,26 +45,27 @@ public class SysLoginController {
         return loginService.fetchCaptcha(captchaId);
     }
 
+    @PreAuthorize("@ss.hasPermi('system:user')")
     @PostMapping("getMenuList/{id}")
     public SysMenuResponse selectMenuListByUserId(@PathVariable("id") String userId) {
         return loginService.selectMenuListByUserId(userId);
     }
 
-    @PreAuthorize("@ss.hasPermi('system:user')")
-    @PostMapping("login/oauth/authorize")
-    public void authorize(HttpServletRequest request, HttpServletResponse response, @RequestParam OauthAuthBody oauthAuthBody) {
-
-        LoginUser loginUser = tokenUtils.getLoginUser(request);
-        if(Objects.isNull(loginUser)) {
-            response.setCharacterEncoding("utf-8");
-            try {
-                response.sendRedirect("http://127.0.0.0:8001/login");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        tokenUtils.verifyToken(loginUser);
-        request.getHeader("Oauth-Token");
-    }
+//    @PreAuthorize("@ss.hasPermi('system:user')")
+//    @PostMapping("login/oauth/authorize")
+//    public void authorize(HttpServletRequest request, HttpServletResponse response, @RequestParam OauthAuthBody oauthAuthBody) {
+//
+//        LoginUser loginUser = tokenUtils.getLoginUser(request);
+//        if(Objects.isNull(loginUser)) {
+//            response.setCharacterEncoding("utf-8");
+//            try {
+//                response.sendRedirect("http://127.0.0.0:8001/login");
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//        tokenUtils.verifyToken(loginUser);
+//        request.getHeader("Oauth-Token");
+//    }
 
 }

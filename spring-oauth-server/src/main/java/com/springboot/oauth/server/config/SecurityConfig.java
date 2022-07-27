@@ -98,13 +98,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 过滤请求
                 .authorizeRequests()
                 // 对于登录login 验证码captchaImage 允许匿名访问
-                .antMatchers("/login/**", "/captcha/**", "/actuator/**", "/oauth/**").anonymous()
+                .antMatchers("/login/**", "/captcha/**", "/actuator/**", "/oauth/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/*.html", "/**/*.html", "/**/*.css", "/**/*.js")
                 .permitAll()
                 .antMatchers("/redis/**").anonymous()
                 .antMatchers("/druid/**").anonymous()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()
+                .and()
+                .httpBasic()
                 .and()
                 .headers().frameOptions().disable();
         httpSecurity.cors();
