@@ -6,6 +6,142 @@
 	},
 	"item": [
 		{
+			"name": "github",
+			"item": [
+				{
+					"name": "check token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://api.github.com/applications/Iv1.8a61f9b3a7aba766/token",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"applications",
+								"Iv1.8a61f9b3a7aba766",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteToken",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic NWNhOWExNGExYzRiYjBlZmRhMTA6YWIzOGZiNmEwODc0MDAzZTEzNGUzYzdiNTdhYjJlN2FmNmIzNTViYw==",
+								"type": "default"
+							},
+							{
+								"key": "Accept",
+								"value": "application/vnd.github+json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"access_token\":\"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\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.github.com/applications/5ca9a14a1c4bb0efda10/token",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"applications",
+								"5ca9a14a1c4bb0efda10",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "resetToken",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "ab38fb6a0874003e134e3c7b57ab2e7af6b355bc",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "5ca9a14a1c4bb0efda10",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic NWNhOWExNGExYzRiYjBlZmRhMTA6YWIzOGZiNmEwODc0MDAzZTEzNGUzYzdiNTdhYjJlN2FmNmIzNTViYw==",
+								"type": "default"
+							},
+							{
+								"key": "Accept",
+								"value": "application/vnd.github+json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"access_token\":\"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\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.github.com/applications/Iv1.8a61f9b3a7aba766/token",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"applications",
+								"Iv1.8a61f9b3a7aba766",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "captcha",
 			"request": {
 				"method": "POST",

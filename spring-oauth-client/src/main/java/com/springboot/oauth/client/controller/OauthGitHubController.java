@@ -36,7 +36,7 @@ public class OauthGitHubController {
     @GetMapping("oauth/authorize")
     public void authorize(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String clientId = request.getParameter("client_id");
-        if(StringUtils.isBlank(clientId)) {
+        if (StringUtils.isBlank(clientId)) {
             return;
         }
 
@@ -52,23 +52,28 @@ public class OauthGitHubController {
 //        response.sendRedirect(loginUrl);
     }
 
-   public String getAuthorizeUrl(HttpServletRequest request) {
-       StringBuilder builder = new StringBuilder();
-       builder
-               .append(GITHUB_OAUTH_AUTHORIZE_URL)
-               .append("?");
-       Enumeration<String> parameterNames = request.getParameterNames();
-       while (parameterNames.hasMoreElements()) {
-           String parameterName = parameterNames.nextElement();
-           builder
-                   .append(parameterName)
-                   .append("=")
-                   .append(request.getParameter(parameterName))
-                   .append("&");
-       }
-       builder.deleteCharAt(builder.length()-1);
-       return builder.toString();
-   }
+    /**
+     * https://docs.github.com/cn/rest/apps/oauth-applications#delete-an-app-token
+     * {"access_token":"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","scope":"repo","token_type":"bearer"}
+     */
+
+    public String getAuthorizeUrl(HttpServletRequest request) {
+        StringBuilder builder = new StringBuilder();
+        builder
+                .append(GITHUB_OAUTH_AUTHORIZE_URL)
+                .append("?");
+        Enumeration<String> parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            String parameterName = parameterNames.nextElement();
+            builder
+                    .append(parameterName)
+                    .append("=")
+                    .append(request.getParameter(parameterName))
+                    .append("&");
+        }
+        builder.deleteCharAt(builder.length() - 1);
+        return builder.toString();
+    }
 
 //   public Cookie setGithubCookie(Cookie cookie) {
 //        cookie.setHttpOnly(true);
@@ -81,14 +86,14 @@ public class OauthGitHubController {
 
     @GetMapping("callback")
     public JSONObject callback(HttpServletRequest request) throws Exception {
-       String code = request.getParameter("code");
-       if(StringUtils.isNotBlank(code)) {
-           List<Header> headers = new ArrayList<>();
-           headers.add(new BasicHeader("Accept","application/json"));
-           String respEntity = HttpUtils.doPost("https://github.com/login/oauth/access_token?client_id=5ca9a14a1c4bb0efda10&client_secret=ab38fb6a0874003e134e3c7b57ab2e7af6b355bc&code="+code, null, headers);
-           return JSONObject.parseObject(respEntity);
-       }
-       return null;
+        String code = request.getParameter("code");
+        if (StringUtils.isNotBlank(code)) {
+            List<Header> headers = new ArrayList<>();
+            headers.add(new BasicHeader("Accept", "application/json"));
+            String respEntity = HttpUtils.doPost("https://github.com/login/oauth/access_token?client_id=5ca9a14a1c4bb0efda10&client_secret=ab38fb6a0874003e134e3c7b57ab2e7af6b355bc&code=" + code, null, headers);
+            return JSONObject.parseObject(respEntity);
+        }
+        return null;
     }
 
 //    public static void main(String[] args) {
@@ -102,3 +107,4 @@ public class OauthGitHubController {
 //
 //    }
 }
+
