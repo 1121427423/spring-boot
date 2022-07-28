@@ -40,20 +40,6 @@ public class HttpUtils {
     private static final int CONNECT_REQUEST_TIMEOUT = Integer.parseInt("60000");
     private static final int SO_TIMEOUT = Integer.parseInt("60000");
 
-    public static void main(String[] args) {
-//        Map<String, Object> map = new HashMap<>(2);
-//        map.put("username","86547462");
-//        map.put("password","123456");
-//        try {
-//            doPost("http://127.0.0.1:8001/login",map);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-        Map<String, Object> headerMap = new HashMap<>(2);
-        headerMap.put("Cookie", new BasicHeader("Cookie","JSESSIONID=A994F60409602F844C6CD0FAA1D7FF48"));
-        doGet("http://127.0.0.1:8001/oauth/authorize?response_type=code&scope=all&client_id=1121427423&redirect_uri=https://www.bilibili.com",headerMap);
-    }
-
     public static String doPost(String url) {
         try {
             return doPost(url, null, null);
@@ -62,29 +48,34 @@ public class HttpUtils {
         }
     }
 
-    public static String doGet(String url, Map<String,Object> headerMap) {
-        CloseableHttpClient client = null;
+    public static String doGet(String url, List<Header> headers) {
+        CloseableHttpClient httpClient = null;
         CloseableHttpResponse response = null;
         try {
+
+            if (url.startsWith("https")) {
+                httpClient = HttpUtils.getHttpsClient();
+            } else {
+                httpClient = HttpClients.createDefault();
+            }
             // 创建客户端连接对象
-            client = HttpClients.createDefault();
             HttpGet httpGet = new HttpGet(url);
             RequestConfig config = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).setConnectionRequestTimeout(CONNECT_REQUEST_TIMEOUT)
                     .setSocketTimeout(SO_TIMEOUT).build();
             httpGet.setConfig(config);
             //headerMap用作请求参数map
-            if(null != headerMap && headerMap.size() > 0) {
-                for (String key: headerMap.keySet()) {
-                    httpGet.addHeader((Header) headerMap.get(key));
+            if(null != headers && headers.size() > 0) {
+                for (Header header: headers) {
+                    httpGet.addHeader(header);
                 }
             }
             // 获取返回对象
-            response = client.execute(httpGet);
+            response = httpClient.execute(httpGet);
             //清空headerMap，用作返回头map集合
-            headerMap = headerMap == null ? new HashMap<>(16) : headerMap;
-            headerMap.clear();
-            getResponseHeader(response, headerMap);
+            headers = headers == null ? new ArrayList<>() : headers;
+            headers.clear();
 
+            getResponseHeader(response, headers);
             // 整理返回值
             HttpEntity entity = response.getEntity();
             return EntityUtils.toString(entity);
@@ -94,8 +85,8 @@ public class HttpUtils {
         } finally {
             // 关闭连接和流
             try {
-                if (client != null) {
-                    client.close();
+                if (httpClient != null) {
+                    httpClient.close();
                 }
                 if (response != null) {
                     response.close();
@@ -106,7 +97,7 @@ public class HttpUtils {
         }
     }
 
-    public static String doPost(String url, Map<String, Object> paraMap, Map<String, Object> headerMap)
+    public static String doPost(String url, Map<String, Object> paraMap, List<Header> headers)
             throws Exception {
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse resp = null;
@@ -126,9 +117,9 @@ public class HttpUtils {
                 }
             }
 
-            if(null != headerMap && headerMap.size() > 0) {
-                for (String key: headerMap.keySet()) {
-                    httpPost.addHeader((Header) headerMap.get(key));
+            if(null != headers && headers.size() > 0) {
+                for (Header header: headers) {
+                    httpPost.addHeader(header);
                 }
             }
 
@@ -139,9 +130,9 @@ public class HttpUtils {
             httpPost.setEntity(new UrlEncodedFormEntity(list, CHARSET));
             resp = httpClient.execute(httpPost);
 
-            headerMap = headerMap == null ? new HashMap<>(16) : headerMap;
-            headerMap.clear();
-            getResponseHeader(resp, headerMap);
+            headers = headers == null ? new ArrayList<>() : headers;
+            headers.clear();
+            getResponseHeader(resp, headers);
 
             rtnValue = EntityUtils.toString(resp.getEntity(), CHARSET);
         } finally {
@@ -159,10 +150,10 @@ public class HttpUtils {
     /**
      * 获取请求返回头参数集合
      * @param response CloseableHttpResponse
-     * @param headerMap 请求返回头参数集合
+     * @param headers 请求返回头参数集合
      */
-    public static void getResponseHeader(CloseableHttpResponse response, Map<String, Object> headerMap) {
-        Arrays.stream(response.getAllHeaders()).forEach(header -> headerMap.put(header.getName(),header));
+    public static void getResponseHeader(CloseableHttpResponse response, List<Header> headers) {
+        Arrays.stream(response.getAllHeaders()).forEach(header -> headers.add(header));
     }
 
     public static CloseableHttpClient getHttpsClient() throws Exception {
